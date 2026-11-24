@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EnglishLions | Curso Interactivo de Inglés</title>
+  <style>
+    :root {
+      --primary: #1b4332;
+      --primary-light: #2d6a4f;
+      --accent: #d97706;
+      --bg: #f4f7f5;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --ok: #15803d;
+      --err: #b91c1c;
+      --border: #e5e7eb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+      padding: 2rem 1.25rem;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .brand {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.9;
+      margin-bottom: 0.4rem;
+    }
+
+    h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: 0.5rem; }
+    .subtitle { opacity: 0.92; max-width: 68ch; }
+
+    nav {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .nav-inner {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding: 0.65rem 0;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      color: var(--text);
+      padding: 0.5rem 0.95rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    main { padding: 1.75rem 0 3rem; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .card h2, .card h3 { margin-bottom: 0.5rem; color: var(--primary); }
+    .muted { color: var(--muted); font-size: 0.95rem; }
+
+    .btn {
+      display: inline-block;
+      margin-top: 0.75rem;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: none;
+      background: var(--primary-light);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn:hover { background: var(--primary); }
+    .btn.secondary { background: var(--accent); }
+
+    .question-box {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 10px;
+      background: #f9fafb;
+      border: 1px solid var(--border);
+    }
+
+    .option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin-top: 0.5rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .option:hover { border-color: var(--primary-light); }
+
+    .feedback {
+      margin-top: 0.75rem;
+      font-weight: 600;
+    }
+
+    .ok { color: var(--ok); }
+    .err { color: var(--err); }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.65rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="brand">EnglishLions · Curso Interactivo</div>
+      <h1>Inglés Práctico: Conversación, Gramática y Pronunciación</h1>
+      <p class="subtitle">
+        Practica expresiones cotidianas, evalúa tu comprensión y entrena tu pronunciación en inglés paso a paso.
+      </p>
+    </div>
+  </header>
+
+  <nav>
+    <div class="container nav-inner">
+      <button class="tab-btn active" data-tab="modulos">1. Módulos del Curso</button>
+      <button class="tab-btn" data-tab="quiz">2. Quiz de Práctica</button>
+      <button class="tab-btn" data-tab="pronunciacion">3. Práctica de Voz</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- SECCIÓN 1: MÓDULOS -->
+    <section id="modulos" class="section active">
+      <div class="card">
+        <h2>Ruta de Aprendizaje</h2>
+        <p class="muted">Selecciona un módulo para comenzar tu práctica guiada.</p>
+        <div class="grid">
+          <div class="card">
+            <h3>Unidad 1: Presentaciones y Rutinas</h3>
+            <p class="muted">Vocabulario esencial para presentarte, hablar de tu trabajo o estudios y describir tu día.</p>
+            <button class="btn" onclick="openTab('quiz')">Ir al Quiz</button>
+          </div>
+          <div class="card">
+            <h3>Unidad 2: Comparaciones y Tecnología</h3>
+            <p class="muted">Expresiones para comparar productos, dar opiniones y responder de forma natural.</p>
+            <button class="btn" onclick="openTab('quiz')">Practicar Unidad</button>
+          </div>
+          <div class="card">
+            <h3>Unidad 3: Speaking y Pronunciación</h3>
+            <p class="muted">Escucha la frase modelo en inglés y pronúnciala en voz alta para revisar tu precisión.</p>
+            <button class="btn secondary" onclick="openTab('pronunciacion')">Practicar Voz</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: QUIZ -->
+    <section id="quiz" class="section">
+      <div class="card">
+        <h2>Quiz Rápido de Comprensión</h2>
+        <p class="muted">Elige la opción correcta para completar cada oración.</p>
+
+        <div class="question-box" id="q1">
+          <p><strong>1.</strong> I’m thinking about getting a new ________ for my computer.</p>
+          <button class="option" onclick="checkAnswer('q1', false, this)">a) No kidding</button>
+          <button class="option" onclick="checkAnswer('q1', true, this)">b) monitor</button>
+          <button class="option" onclick="checkAnswer('q1', false, this)">c) catch up</button>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-box" id="q2">
+          <p><strong>2.</strong> Let’s ________ this weekend and talk about our new projects.</p>
+          <button class="option" onclick="checkAnswer('q2', true, this)">a) catch up</button>
+          <button class="option" onclick="checkAnswer('q2', false, this)">b) hang up</button>
+          <button class="option" onclick="checkAnswer('q2', false, this)">c) take off</button>
+          <div class="feedback"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: PRONUNCIACIÓN -->
+    <section id="pronunciacion" class="section">
+      <div class="card">
+        <h2>Laboratorio de Pronunciación (en-US)</h2>
+        <p class="muted">
+          1) Escucha la frase modelo. 2) Pulsa <strong>Hablar</strong> y pronúnciala en voz alta (recomendado en Chrome o Edge).
+        </p>
+
+        <label for="targetPhrase"><strong>Frase objetivo en inglés:</strong></label>
+        <input id="targetPhrase" type="text" value="I will think it over and let you know tomorrow." />
+
+        <div>
+          <button class="btn" onclick="listenPhrase()">🔊 Escuchar modelo</button>
+          <button class="btn secondary" id="micBtn" onclick="startRecognition()">🎤 Hablar y evaluar</button>
+        </div>
+
+        <div class="feedback" id="speechResult"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    EnglishLions · Material didáctico interactivo para clases de inglés
+  </footer>
+
+  <script>
+    function openTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
+      });
+      document.querySelectorAll('.section').forEach(sec => {
+        sec.classList.toggle('active', sec.id === tabId);
+      });
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => openTab(btn.dataset.tab));
+    });
+
+    function checkAnswer(boxId, isCorrect, el) {
+      const box = document.getElementById(boxId);
+      const fb = box.querySelector('.feedback');
+      if (isCorrect) {
+        fb.textContent = '¡Muy bien! Respuesta correcta.';
+        fb.className = 'feedback ok';
+      } else {
+        fb.textContent = 'Inténtalo de nuevo.';
+        fb.className = 'feedback err';
+      }
+      el.blur();
+    }
+
+    function listenPhrase() {
+      const text = document.getElementById('targetPhrase').value.trim();
+      const out = document.getElementById('speechResult');
+      if (!('speechSynthesis' in window)) {
+        out.textContent = 'Tu navegador no soporta síntesis de voz.';
+        out.className = 'feedback err';
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'en-US';
+      window.speechSynthesis.speak(utter);
+    }
+
+    function startRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const out = document.getElementById('speechResult');
+      const target = document.getElementById('targetPhrase').value.trim().toLowerCase();
+
+      if (!SpeechRecognition) {
+        out.textContent = 'El reconocimiento de voz no está disponible en este navegador o contexto.';
+        out.className = 'feedback err';
+        return;
+      }
+
+      const rec = new SpeechRecognition();
+      rec.lang = 'en-US';
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+
+      out.textContent = 'Escuchando... habla ahora en inglés.';
+      out.className = 'feedback';
+
+      rec.onresult = (event) => {
+        const spoken = event.results[0][0].transcript.toLowerCase().trim();
+        const targetWords = target.replace(/[^\w\s]/g, '').split(/\s+/).filter(Boolean);
+        const spokenWords = spoken.replace(/[^\w\s]/g, '').split(/\s+/).filter(Boolean);
+        const matches = targetWords.filter(w => spokenWords.includes(w)).length;
+        const score = targetWords.length ? Math.round((matches / targetWords.length) * 100) : 0;
+
+        out.textContent = `Dijiste: "${spoken}" · Precisión aproximada: ${score}%`;
+        out.className = score >= 70 ? 'feedback ok' : 'feedback err';
+      };
+
+      rec.onerror = (e) => {
+        out.textContent = `No se pudo acceder al micrófono o ocurrió un error (${e.error}). Revisa los permisos del navegador.`;
+        out.className = 'feedback err';
+      };
+
+      rec.start();
+    }
+  </script>
+</body>
+</html>
