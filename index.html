@@ -1,11 +1,450 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Hola Mundo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice, Scoring & Audio Recorder</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 550px;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.5em;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+        }
+        .reading-box {
+            background: #ebf5fb;
+            border: 2px dashed #3498db;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .reading-text {
+            font-size: 1.25em;
+            color: #1f618d;
+            line-height: 1.6;
+            margin: 0;
+            font-weight: 500;
+            outline: none;
+        }
+        .box-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #d6eaf8;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tts-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn-listen {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background 0.2s;
+        }
+        .btn-listen:hover {
+            background-color: #2980b9;
+        }
+        .btn-listen.speaking {
+            background-color: #e67e22;
+        }
+        .speed-select {
+            padding: 7px;
+            border-radius: 6px;
+            border: 1px solid #aed6f1;
+            background: white;
+            color: #2c3e50;
+            font-size: 0.85em;
+            cursor: pointer;
+        }
+        /* Botón de evaluación por voz */
+        .record-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+            transition: all 0.2s ease;
+            margin: 10px auto;
+            display: inline-block;
+        }
+        .record-btn:hover {
+            background-color: #219653;
+        }
+        .record-btn.recording {
+            background-color: #e74c3c;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        /* Resultados de la evaluación y reproductor */
+        .results-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: left;
+            display: none;
+        }
+        .results-container p {
+            margin: 6px 0;
+            font-size: 0.95em;
+            color: #34495e;
+        }
+        .score-display {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .audio-player-container {
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #ddd;
+            display: none;
+        }
+        audio {
+            width: 100%;
+            margin-top: 5px;
+        }
+        .actions-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 12px;
+        }
+        .btn-action {
+            background-color: #ecf0f1;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            color: #2c3e50;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-action:hover {
+            background-color: #bdc3c7;
+        }
+        .btn-download {
+            background-color: #2980b9;
+            color: white;
+        }
+        .btn-download:hover {
+            background-color: #2471a3;
+        }
+        .error-msg {
+            color: #c0392b;
+            font-size: 0.85em;
+            margin-top: 10px;
+            display: none;
+            background: #fadbd8;
+            padding: 8px;
+            border-radius: 6px;
+        }
+    </style>
 </head>
 <body>
-  <h1>¡Hola, mundo!</h1>
-  <p>Esta es mi primera página web con HTML.</p>
+
+<div class="card">
+    <h2>Pronunciation Practice & Scoring</h2>
+    <p class="subtitle">Listen, practice, get your score, and record yourself</p>
+
+    <!-- Caja de texto en inglés editable -->
+    <div class="reading-box">
+        <p class="reading-text" id="englishText" contenteditable="true">
+            Hello! My name is Alex, and I am learning English. Every morning, I wake up early and practice my pronunciation.
+        </p>
+        
+        <div class="box-footer">
+            <div class="tts-controls">
+                <button class="btn-listen" id="listenFemaleBtn" onclick="toggleSpeech('female')">Listen (F)</button>
+                <button class="btn-listen" id="listenMaleBtn" onclick="toggleSpeech('male')">Listen (M)</button>
+                <select class="speed-select" id="speedSelect" title="Speed">
+                    <option value="0.75">0.75x (Lento)</option>
+                    <option value="1" selected>1.0x (Normal)</option>
+                    <option value="1.25">1.25x (Rápido)</option>
+                </select>
+            </div>
+            <span style="font-size: 0.75em; color: #5dade2;">Haz clic para editar</span>
+        </div>
+    </div>
+
+    <!-- Botón para evaluar pronunciación con voz -->
+    <div>
+        <button class="record-btn" id="micBtn" onclick="togglePracticeSession()">🎤 Practicar y Evaluar</button>
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+
+    <!-- Panel de Resultados, Reproductor de audio y Descarga -->
+    <div class="results-container" id="resultsBox">
+        <p><strong>Lo que se escuchó:</strong> <span id="spokenText" style="color: #555;">-</span></p>
+        <p><strong>Precisión:</strong> <span id="accuracyText" style="font-weight: bold; color: #2980b9;">-</span></p>
+        <div class="score-display" id="scoreDisplay">-</div>
+
+        <!-- Reproductor y descarga -->
+        <div class="audio-player-container" id="playerContainer">
+            <p style="margin: 0; font-size: 0.85em; color: #555; font-weight: bold;">Escucha tu grabación:</p>
+            <audio id="audioPlayback" controls></audio>
+            
+            <div class="actions-container">
+                <a id="downloadBtn" class="btn-action btn-download" download="my_practice.webm">📥 Descargar Audio</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- 1. LÓGICA DE TEXTO A VOZ (TTS) ---
+    const englishText = document.getElementById("englishText");
+    const listenFemaleBtn = document.getElementById("listenFemaleBtn");
+    const listenMaleBtn = document.getElementById("listenMaleBtn");
+    const speedSelect = document.getElementById("speedSelect");
+
+    let voices = [];
+    function loadVoices() { voices = window.speechSynthesis.getVoices(); }
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+
+    function toggleSpeech(gender) {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+            resetListenButtons();
+            return;
+        }
+        const textToRead = englishText.innerText.trim();
+        if (!textToRead) return;
+
+        const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.lang = 'en-US';
+        utterance.rate = parseFloat(speedSelect.value);
+
+        const englishVoices = voices.filter(v => v.lang.startsWith('en'));
+        if (englishVoices.length > 0) {
+            if (gender === 'female') {
+                utterance.voice = englishVoices.find(v => /zira|susan|emma|victoria|female/i.test(v.name)) || englishVoices[0];
+            } else {
+                utterance.voice = englishVoices.find(v => /david|george|mark|male/i.test(v.name)) || englishVoices[1] || englishVoices[0];
+            }
+        }
+
+        const activeBtn = gender === 'female' ? listenFemaleBtn : listenMaleBtn;
+        utterance.onstart = () => { activeBtn.textContent = "Stop"; activeBtn.classList.add("speaking"); };
+        utterance.onend = resetListenButtons;
+        utterance.onerror = resetListenButtons;
+
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function resetListenButtons() {
+        listenFemaleBtn.textContent = "Listen (F)";
+        listenFemaleBtn.classList.remove("speaking");
+        listenMaleBtn.textContent = "Listen (M)";
+        listenMaleBtn.classList.remove("speaking");
+    }
+
+    // --- 2. EVALUACIÓN Y GRABACIÓN DE AUDIO (MediaRecorder + SpeechRecognition) ---
+    const micBtn = document.getElementById("micBtn");
+    const resultsBox = document.getElementById("resultsBox");
+    const spokenTextSpan = document.getElementById("spokenText");
+    const accuracyTextSpan = document.getElementById("accuracyText");
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    const playerContainer = document.getElementById("playerContainer");
+    const audioPlayback = document.getElementById("audioPlayback");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const errorMsg = document.getElementById("errorMsg");
+
+    let recognition = null;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let mediaStream = null;
+    let isRecording = false;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        errorMsg.style.display = "block";
+        errorMsg.textContent = "Tu navegador no soporta reconocimiento de voz. Usa Google Chrome o Microsoft Edge.";
+        micBtn.disabled = true;
+    } else {
+        recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onresult = function(event) {
+            const speechToText = event.results[0][0].transcript;
+            evaluatePronunciation(speechToText);
+        };
+
+        recognition.onerror = function(event) {
+            console.error("Error de voz:", event.error);
+            stopEverything();
+            errorMsg.style.display = "block";
+            if (event.error === 'not-allowed') {
+                errorMsg.textContent = "Acceso al micrófono denegado. Permítelo en tu navegador.";
+            } else {
+                errorMsg.textContent = "No se detectó bien la voz. Inténtalo de nuevo.";
+            }
+        };
+
+        recognition.onend = function() {
+            stopEverything();
+        };
+    }
+
+    async function togglePracticeSession() {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+            resetListenButtons();
+        }
+
+        if (!isRecording) {
+            audioChunks = [];
+            errorMsg.style.display = "none";
+            resultsBox.style.display = "none";
+
+            try {
+                // Solicitar micrófono tanto para grabar audio como para evaluar texto
+                mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                // Iniciar Grabador de Audio (para que el usuario se escuche)
+                mediaRecorder = new MediaRecorder(mediaStream);
+                mediaRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    audioPlayback.src = audioUrl;
+                    downloadBtn.href = audioUrl;
+                    playerContainer.style.display = "block";
+                };
+                mediaRecorder.start();
+
+                // Iniciar Reconocimiento (para calcular el porcentaje)
+                recognition.start();
+
+                isRecording = true;
+                micBtn.textContent = "Escuchando y grabando... 🔴 (Haz clic para terminar)";
+                micBtn.classList.add("recording");
+
+            } catch (err) {
+                console.error("Error:", err);
+                errorMsg.style.display = "block";
+                errorMsg.textContent = "No se pudo acceder al micrófono. Verifica los permisos.";
+            }
+        } else {
+            // Detener manualmente si el usuario vuelve a hacer clic
+            stopEverything();
+        }
+    }
+
+    function stopEverything() {
+        if (isRecording) {
+            if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                mediaRecorder.stop();
+            }
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+            }
+            try {
+                recognition.stop();
+            } catch(e) {}
+
+            isRecording = false;
+            micBtn.textContent = "🎤 Practicar y Evaluar";
+            micBtn.classList.remove("recording");
+        }
+    }
+
+    // Algoritmo de comparación y calificación porcentual (0% - 100%)
+    function evaluatePronunciation(spoken) {
+        const target = englishText.innerText.trim().toLowerCase().replace(/[^\w\s]/gi, '');
+        const cleanSpoken = spoken.trim().toLowerCase().replace(/[^\w\s]/gi, '');
+
+        spokenTextSpan.textContent = `"${spoken}"`;
+        resultsBox.style.display = "block";
+
+        const targetWords = target.split(/\s+/);
+        const spokenWords = cleanSpoken.split(/\s+/);
+
+        let matches = 0;
+        targetWords.forEach(word => {
+            if (spokenWords.includes(word)) {
+                matches++;
+            }
+        });
+
+        let percentage = Math.round((matches / targetWords.length) * 100);
+        if (cleanSpoken === target) percentage = 100;
+
+        accuracyTextSpan.textContent = `${percentage}%`;
+
+        if (percentage >= 80) {
+            scoreDisplay.innerHTML = "🌟 ¡Excelente pronunciación! 🎉";
+            scoreDisplay.style.color = "#27ae60";
+        } else if (percentage >= 50) {
+            scoreDisplay.innerHTML = "👍 ¡Buen intento! Pero puedes mejorar.";
+            scoreDisplay.style.color = "#d35400";
+        } else {
+            scoreDisplay.innerHTML = "⚠️ Sigue practicando. Escucha el audio de modelo de nuevo.";
+            scoreDisplay.style.color = "#e74c3c";
+        }
+    }
+</script>
+
 </body>
 </html>
